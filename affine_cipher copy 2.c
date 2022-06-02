@@ -73,7 +73,6 @@ char* get_text() {
 
     while (scanf("%c", &t) == 1) {
         if (t == '\n') break;
-        else if(!isalpha(t)) continue;
         len = strlen(s);
         s = realloc(s, len+1);
         *(s + len) = t;
