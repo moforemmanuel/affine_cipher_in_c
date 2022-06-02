@@ -41,6 +41,8 @@ int main() {
             char* plain_text = get_plain_text();
             char* cipher_text = encrypt(input.a, input.b, plain_text);
             printf("Plain Text: %s\nCipher Text: %s\n\n", plain_text, cipher_text);
+            free(plain_text);
+            free(cipher_text);
         } 
 
         else if (choice == 2) {
@@ -49,6 +51,8 @@ int main() {
             char* cipher_text = get_cipher_text();
             char* plain_text = decrypt(input.a, input.b, cipher_text);
             printf("Cipher Text: %s\nPlain Text: %s\n\n", cipher_text, plain_text);
+            free(cipher_text);
+            free(plain_text);
         }
 
         else if (choice == 3) {
@@ -80,7 +84,6 @@ char* get_text() {
     }
 
     return (s);
-    free(s);
 }
 
 char* get_plain_text(){
@@ -90,9 +93,8 @@ char* get_plain_text(){
     for (int i = 0; i < strlen(text); i++){
         *(plain_text + i) = tolower(*(text + i));
     }
-
+    free(text);
     return plain_text;
-    free(plain_text);
 
 }
 char* get_cipher_text(){
@@ -102,9 +104,8 @@ char* get_cipher_text(){
     for (int i = 0; i < strlen(text); i++){
         *(cipher_text + i) = toupper(*(text + i));
     }
-
+    free(text);
     return cipher_text;
-    free(cipher_text);
 }
 
 
@@ -227,7 +228,7 @@ char* encrypt(int a, int b, char* plain_text) {
     }
     *(cipher_text + strlen(cipher_text) + 1) = '\0';
     return cipher_text;
-    free(cipher_text);
+    
 }
 
 char* decrypt(int a, int b, char* cipher_text) {
@@ -245,5 +246,5 @@ char* decrypt(int a, int b, char* cipher_text) {
     }
     *(plain_text + strlen(cipher_text) + 1) = '\0';
     return plain_text;
-    free(plain_text);
+    
 }
