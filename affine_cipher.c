@@ -25,6 +25,7 @@ char* get_cipher_text();
 int letter_to_index(char letter);
 char index_to_letter(int index);
 
+int mod26(int n);
 int gcd(int a, int b);
 int modInverse(int a, int m);
 
@@ -72,10 +73,16 @@ char* get_text() {
 
     while (scanf("%c", &t) == 1) {
         if (t == '\n') break;
-        len = strlen(s);
-        s = realloc(s, len+1);
-        *(s + len) = t;
-        *(s + len + 1) = '\0';
+        else if (!isalpha(t)){
+            printf("Invalid character \"%c\" in text.", t);
+            exit(EXIT_FAILURE);
+        }
+        else {
+            len = strlen(s);
+            s = realloc(s, len+1);
+            *(s + len) = t;
+            *(s + len + 1) = '\0';
+        }
     }
 
     return (s);
@@ -133,12 +140,11 @@ twoInts get_input(){
     return input;
 }
 
+int mod26(int n) {
+    return (n % 26 + 26) % 26;
+}
+
 int gcd(int a, int b) {
-    // int r = a % b;
-
-    // if (r == 0) return b;
-    // return gcd(b, r);
-
     int i, gcd;
     for (i = 1; i <= a && i <= b; ++i) {
         if (a % i == 0 && b % i == 0) {
@@ -196,7 +202,7 @@ char* encrypt(int a, int b, char* plain_text) {
     for(int i = 0; i < strlen(plain_text); i++) {
         char plain_letter = toupper(plain_text[i]);
         int x = letter_to_index(plain_letter); //plain index
-        int cipher_index = ((a*x) + b) % 26;
+        int cipher_index = mod26((a*x) + b);
         char cipher_letter = index_to_letter(cipher_index);
         *(cipher_text + i) = cipher_letter;
 
@@ -214,7 +220,7 @@ char* decrypt(int a, int b, char* cipher_text) {
         char cipher_letter = cipher_text[i];
         int y = letter_to_index(cipher_letter);
         int a_inv = modInverse(a, 26);
-        int plain_index = a_inv*(y - b) % 26;
+        int plain_index = mod26(a_inv*(y - b));
         char plain_letter = index_to_letter(plain_index);
         *(plain_text + i) = tolower(plain_letter);
 
