@@ -29,28 +29,49 @@ int mod26(int n);
 int gcd(int a, int b);
 int modInverse(int a, int m);
 
+void driver();
+
 int main() {
+    while (1) {
+        driver();
+        int decision;
+        printf("Would u like to perform another operation?\n1)Yes\n2)No\nDecision: ");
+        scanf("%d", &decision);
+        
+        if (decision != 1){
+            printf("... Goodbye ...\n");
+            exit(EXIT_SUCCESS);
+        }
+    }
+        
+    
+}
+
+
+void driver() {
+    
+    twoInts input = get_input();
     int choice;
     printf("\nWhat operation would you like to perform?\n");
     printf("1)Encrypt\n2)Decrypt\n3)Exit\nChoice: ");
     scanf("%d", &choice);
 
     if (choice == 1) {
-        twoInts input = get_input();
+        printf("\ny = λx + b (mod 26)\n");
         printf("\nEnter Plain text: ");
         char* plain_text = get_plain_text();
         char* cipher_text = encrypt(input.a, input.b, plain_text);
-        printf("Plain Text: %s\nCipher Text: %s\n\n", plain_text, cipher_text);
+        printf("\nPlain Text: %s\nCipher Text: %s\n\n", plain_text, cipher_text);
         free(plain_text);
         free(cipher_text);
     } 
 
     else if (choice == 2) {
-        twoInts input = get_input();
+        printf("\nx = (λ^-1)(y - b)(mod 26)\n");
         printf("\nEnter Cipher text: ");
         char* cipher_text = get_cipher_text();
         char* plain_text = decrypt(input.a, input.b, cipher_text);
-        printf("Cipher Text: %s\nPlain Text: %s\n\n", cipher_text, plain_text);
+        printf("\nCipher Text: %s\nPlain Text: %s\n\n", cipher_text, plain_text);
         free(cipher_text);
         free(plain_text);
     }
@@ -64,38 +85,44 @@ int main() {
         printf("\nInvalid choice\n");
     }
     
+    
+  
 }
 
 char* get_text() {
-    char* s = calloc(1, sizeof(char));
-    char t;
-    int len;
+    // char* s = calloc(1, sizeof(char));
+    // char t;
+    // int len;
 
-    while (scanf("%c", &t) == 1) {
-        if (t == '\n') break;
-        else if(!isalpha(t)) continue;
-        len = strlen(s);
-        s = realloc(s, len+1);
-        *(s + len) = t;
-        *(s + len + 1) = '\0';
-    }
+    // while (scanf("%c", &t) == 1) {
+    //     if (t == '\n') break;
+    //     else if(!isalpha(t)) continue;
+    //     len = strlen(s);
+    //     s = realloc(s, len+1);
+    //     *(s + len) = t;
+        
+    // }
+    // *(s + len + 1) = '\0';
 
-    return (s);
+    char s[100];
+    fgets(s,100,stdin);
+    puts(s);
+    return s;
 }
 
 char* get_plain_text(){
-    get_text();
+    // get_text();
     char* text = get_text();
-    char* plain_text = malloc(strlen(text));
-    for (int i = 0; i < strlen(text); i++){
-        *(plain_text + i) = tolower(*(text + i));
-    }
-    free(text);
-    return plain_text;
+    // char* plain_text = malloc(strlen(text));
+    // for (int i = 0; i < strlen(text); i++){
+    //     *(plain_text + i) = tolower(*(text + i));
+    // }
+    // free(text);
+    return text;
 
 }
 char* get_cipher_text(){
-    get_text();
+    // get_text();
     char* text = get_text();
     char* cipher_text = malloc(strlen(text));
     for (int i = 0; i < strlen(text); i++){
@@ -209,7 +236,10 @@ char* encrypt(int a, int b, char* plain_text) {
 
 char* decrypt(int a, int b, char* cipher_text) {
     //x = inv(a)*(y - b) mod 26
-    char* plain_text = malloc(strlen(cipher_text));
+    printf("cipher len: %d\n", strlen(cipher_text));
+    char* plain_text = malloc(strlen(cipher_text) + 1);
+    printf("plain len: %d\n", strlen(plain_text));
+
 
     for(int i = 0; i < strlen(cipher_text); i++) {
         char cipher_letter = cipher_text[i];
@@ -217,10 +247,16 @@ char* decrypt(int a, int b, char* cipher_text) {
         int a_inv = modInverse(a, 26);
         int plain_index = mod26(a_inv*(y - b));
         char plain_letter = index_to_letter(plain_index);
-        *(plain_text + i) = tolower(plain_letter);
+        // *(plain_text + i) = tolower(plain_letter);
+        plain_text[i] = tolower(plain_letter);
 
     }
-    *(plain_text + strlen(cipher_text)) = '\0';
+    printf("plain len after: %d\n", strlen(plain_text));
+
+    // *(plain_text + strlen(cipher_text)) = '\0';
+    plain_text[strlen(cipher_text) + 1] = '\0';
+    printf("plain len after null: %d\n", strlen(plain_text));
+
     return plain_text;
     
 }
